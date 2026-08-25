@@ -1,16 +1,29 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import { Inter } from "next/font/google";
+import { Poppins, Anton } from "next/font/google";
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
 import config from "@/config/website.json";
 import "@/styles/globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+// Brand fonts — vedi docs/design-system.md.
+// Anton è il fallback di Extenda 50 Mega finché non disponiamo dei webfont licenziati.
+const poppins = Poppins({
+    subsets: ["latin"],
+    weight: ["400", "600", "700"],
+    variable: "--font-poppins",
+});
+const anton = Anton({
+    subsets: ["latin"],
+    weight: "400",
+    variable: "--font-display",
+});
 
+// Titolo e descrizione di riserva: valgono per le pagine che non ne
+// dichiarano uno proprio. Dalla config, così seguono l'edizione.
 export const metadata = {
-    title: "Cloud Native Days Italy 2025",
-    description: "Cloud Native Days (CND) Italy is a local, community-organized event that gathers adopters and technologists from open source and cloud native communities.",
+    title: `${config.general.event.name} ${config.general.edition}`,
+    description: config.general.event.description,
 };
 
 async function getEditions() {
@@ -28,8 +41,15 @@ export default async function RootLayout({ children }) {
     const availableEditions = await getEditions();
 
     return (
-        <html lang="it" className={inter.variable}>
+        <html lang="it" className={`${poppins.variable} ${anton.variable}`} suppressHydrationWarning>
         <head>
+            {/* Sceglie la composizione decorativa del hero PRIMA del primo paint:
+                nessuno switch visibile e niente scroll anchoring (vedi heroVariants.js). */}
+            <script
+                dangerouslySetInnerHTML={{
+                    __html: 'document.documentElement.dataset.decor=Math.floor(Math.random()*10);',
+                }}
+            />
             <link rel="apple-touch-icon" sizes="57x57" href="/favicons/apple-icon-57x57.png" />
             <link rel="apple-touch-icon" sizes="60x60" href="/favicons/apple-icon-60x60.png" />
             <link rel="apple-touch-icon" sizes="72x72" href="/favicons/apple-icon-72x72.png" />
@@ -48,7 +68,7 @@ export default async function RootLayout({ children }) {
             <meta name="msapplication-TileImage" content="/favicons/ms-icon-144x144.png" />
             <meta name="theme-color" content="#ffffff" />
         </head>
-        <body className="bg-gray-50 text-gray-900">
+        <body className="bg-white font-sans text-ink">
         <Navbar
             data={config}
             editions={availableEditions}

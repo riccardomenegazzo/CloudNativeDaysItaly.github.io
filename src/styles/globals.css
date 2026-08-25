@@ -2,24 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Design system pop/neo-brutalist — vedi docs/design-system.md
+ * Token canonici: tailwind.config.mjs
+ */
+
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #111111;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 
 /* ===== RESET & BASE STYLES ===== */
 *,
@@ -29,13 +20,83 @@ body {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  color: #333;
+  font-family: var(--font-poppins), Poppins, sans-serif;
+  color: var(--foreground);
   line-height: 1.5;
-  background-color: #f8f9fa;
+  background-color: var(--background);
   margin: 0;
   padding: 0;
 }
+
+/* ===== POP UTILITIES (design system) ===== */
+@layer components {
+  .btn-pop {
+    @apply inline-block rounded-none border-pop border-ink px-6 py-3 text-center font-sans font-bold uppercase tracking-wide shadow-pop transition-[box-shadow,transform] duration-100;
+  }
+  .btn-pop:hover {
+    @apply translate-x-[2px] translate-y-[2px] shadow-pop-sm;
+  }
+  .btn-pop-primary {
+    @apply bg-brand-magenta text-white;
+  }
+  .btn-pop-secondary {
+    @apply bg-white text-ink;
+  }
+  .btn-pop-dark {
+    @apply bg-ink text-white;
+  }
+  /* Sulla banda ink il bordo e l'ombra neri sparirebbero nel fondo: questo
+     modificatore li porta a bianco. Si accosta a una variante, non la
+     sostituisce (es. `btn-pop btn-pop-dark btn-pop-on-ink`). */
+  .btn-pop-on-ink {
+    @apply border-white shadow-pop-white;
+  }
+  .btn-pop-on-ink:hover {
+    @apply shadow-pop-white-sm;
+  }
+  .card-pop {
+    @apply rounded-none border-pop border-ink bg-white;
+  }
+  .card-pop-accent {
+    @apply rounded-none border-pop-accent border-brand-magenta bg-white;
+  }
+  .stamp {
+    @apply inline-block -rotate-2 rounded-none border-pop border-ink bg-white px-4 py-1.5 font-display text-stamp uppercase text-ink shadow-pop-sm;
+  }
+  .chip-pop {
+    @apply inline-block rounded-none border-pop border-ink bg-brand-yellow px-3 py-1 text-sm font-bold text-ink;
+  }
+  .section-heading {
+    @apply font-display text-section uppercase text-ink;
+  }
+  /* Occhiello di sezione (h2). Colore contestuale: magenta su chiaro,
+     giallo su blu/nero, ink su giallo. Per i titoli di pagina usare .stamp. */
+  .eyebrow {
+    @apply font-display text-base uppercase tracking-widest;
+  }
+}
+
+/* ===== VARIANTI DECORATIVE HERO =====
+   Tutte nel markup statico; lo script inline in layout.js setta
+   html[data-decor] prima del paint. Senza JS resta visibile la variante 0. */
+.decor-variant {
+  display: none;
+  overflow-anchor: none;
+}
+html:not([data-decor]) .decor-variant-0 {
+  display: block;
+}
+html[data-decor="0"] .decor-variant-0 { display: block; }
+html[data-decor="1"] .decor-variant-1 { display: block; }
+html[data-decor="2"] .decor-variant-2 { display: block; }
+html[data-decor="3"] .decor-variant-3 { display: block; }
+html[data-decor="4"] .decor-variant-4 { display: block; }
+html[data-decor="5"] .decor-variant-5 { display: block; }
+html[data-decor="6"] .decor-variant-6 { display: block; }
+html[data-decor="7"] .decor-variant-7 { display: block; }
+html[data-decor="8"] .decor-variant-8 { display: block; }
+html[data-decor="9"] .decor-variant-9 { display: block; }
+
 
 a {
   text-decoration: none;
@@ -541,4 +602,31 @@ img {
   .speakers-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Nodo "live" della timeline (pagina about): l'ultimo anno lampeggia
+   alternando blu e magenta, i nodi passati restano gialli. */
+@keyframes timeline-node-blink {
+  0%, 100% { background-color: #3069de; }
+  50% { background-color: #f91b71; }
+}
+
+.timeline-node-live {
+  animation: timeline-node-blink 1.6s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline-node-live {
+    animation: none;
+    background-color: #f91b71;
+  }
+}
+
+/* Evidenziatore giallo per le voci di menu che ospitano anche un invito
+   all'azione (es. Sponsors: vetrina + diventa sponsor). Il giallo segna
+   il contesto d'azione, i bottoni restano magenta (vedi design-system). */
+.nav-marker {
+  background-image: linear-gradient(transparent 55%, #fbc430 55%);
+  padding-left: 2px;
+  padding-right: 2px;
 }

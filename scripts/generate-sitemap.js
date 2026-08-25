@@ -14,8 +14,16 @@ async function getStaticPages() {
         '/speakers',
         '/sponsors',
         '/team',
-        '/code-of-conduct', // Assuming you have this page
+        '/about',
+        '/faq',
+        '/partners',
+        '/brand-kit',
+        '/brand-kit/design-system',
     ];
+    // /brand-kit/studio e /brand-kit/card restano fuori: sono le pagine
+    // interne del generator, noindex e non linkate.
+    // /code-of-conduct tornerà quando la pagina esiste: la proposta di testo
+    // è in docs/code-of-conduct-proposal.md, da approvare col team.
 }
 
 async function getDynamicPages(directory, prefix = '') {

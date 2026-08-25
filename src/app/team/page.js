@@ -3,6 +3,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import config from '@/config/website.json';
 import TeamList from '@/components/team/team';
+import { speakerMetaText } from '@/lib/speakerMeta';
 
 export const metadata = {
     title: "Cloud Native Days Italy Team",
@@ -20,7 +21,6 @@ async function getTeamData() {
 
         const teamIds = [...orgIds, ...coreIds];
 
-        console.log(teamIds);
         const teamMembers = await Promise.all(
             teamIds.map(async (memberId) => {
                 const profilePath = path.join(process.cwd(), 'src', 'config', 'profiles', `${memberId}.md`);
@@ -57,7 +57,7 @@ export default async function TeamPage() {
         "member": team.map(member => ({
             "@type": "Person",
             "name": member.name,
-            "jobTitle": `${member.role} ${member.company && `@ ${member.company}`}`,
+            "jobTitle": speakerMetaText(member),
             "sameAs": [member.linkedin, member.github, member.website].filter(Boolean)
         }))
     };

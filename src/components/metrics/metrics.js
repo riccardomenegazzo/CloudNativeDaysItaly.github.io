@@ -1,8 +1,7 @@
 'use client';
-import { Users, Mic, Handshake, Shield } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-const MetricItem = ({ icon, value, label, duration = 2000 }) => {
+const MetricItem = ({ accent, value, label, duration = 2000 }) => {
     const [count, setCount] = useState(0);
     const ref = useRef(null);
 
@@ -27,39 +26,54 @@ const MetricItem = ({ icon, value, label, duration = 2000 }) => {
             { threshold: 0.1 }
         );
 
-        if (ref.current) {
-            observer.observe(ref.current);
+        // Il nodo osservato si cattura ora: alla cleanup `ref.current` può
+        // essere già cambiato (o null) e resterebbe un observer appeso.
+        const node = ref.current;
+        if (node) {
+            observer.observe(node);
         }
 
         return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current);
-            }
+            observer.disconnect();
         };
-    }, [ref, value, duration]);
+    }, [value, duration]);
 
     return (
-        <div ref={ref} className="bg-white p-8 rounded-2xl shadow-xl flex flex-col items-center text-center transform transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-blue-200/50 border-t-4 border-transparent hover:border-blue-500">
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 rounded-full mb-5 ring-4 ring-gray-200">
-                {icon}
-            </div>
-            <p className="text-6xl font-extrabold text-gray-800 tabular-nums">{count}</p>
-            <p className="text-xl text-gray-500 mt-2 font-medium">{label}</p>
+        <div ref={ref} className="flex flex-col items-center p-4 md:p-8 text-center">
+            <p className={`font-display text-5xl md:text-6xl tabular-nums ${accent}`}>
+                {count}
+                {String(value).endsWith('+') && '+'}
+            </p>
+            <p className="text-sm uppercase tracking-widest text-white/80 mt-2 font-semibold">{label}</p>
         </div>
     );
 };
 
-const Metrics = ({ data, teamCount, speakersCount, sponsorsCount }) => (
-    <div className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <MetricItem icon={<Users className="h-12 w-12 text-blue-600" />} value={data.attendees} label="Attendees" />
-                <MetricItem icon={<Mic className="h-12 w-12 text-indigo-600" />} value={speakersCount} label="Speakers" />
-                <MetricItem icon={<Handshake className="h-12 w-12 text-sky-600" />} value={sponsorsCount} label="Sponsors" />
-                <MetricItem icon={<Shield className="h-12 w-12 text-teal-600" />} value={teamCount} label="Organizers" />
+/*
+ * Banda nera con statistiche (wireframe: 02-numbers-strip).
+ * Due modalità:
+ * - items: [{ value, label, accent }] — lista libera (homepage)
+ * - data/teamCount/speakersCount/sponsorsCount — layout storico (past editions)
+ */
+const Metrics = ({ data, teamCount, speakersCount, sponsorsCount, items }) => {
+    const entries = items || [
+        { value: data.attendees, label: 'Attendees', accent: 'text-brand-yellow' },
+        { value: speakersCount, label: 'Speakers', accent: 'text-brand-magenta' },
+        { value: sponsorsCount, label: 'Sponsors', accent: 'text-brand-blue' },
+        { value: teamCount, label: 'Organizers', accent: 'text-brand-yellow' },
+    ];
+
+    return (
+        <div className="py-12 bg-ink">
+            <div className="mx-auto max-w-[1200px] px-6">
+                <div className={`grid grid-cols-2 gap-4 md:gap-8 [&>:last-child:nth-child(odd)]:col-span-2 lg:[&>:last-child:nth-child(odd)]:col-span-1 ${{3:'lg:grid-cols-3',4:'lg:grid-cols-4',5:'lg:grid-cols-5'}[entries.length] || 'lg:grid-cols-4'}`}>
+                    {entries.map((e, i) => (
+                        <MetricItem key={i} accent={e.accent} value={e.value} label={e.label} />
+                    ))}
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 export default Metrics;

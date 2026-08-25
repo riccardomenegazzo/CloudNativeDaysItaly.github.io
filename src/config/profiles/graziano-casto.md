@@ -1,10 +1,10 @@
 ---
 id: "graziano-casto"
 name: "Graziano Casto"
-role: "Developer Relations Engineer | Tech Lead @ CNCF TAG DevEx | Kubernetes v1.35 Comms Lead"
+role: "Developer Relations Engineer"
 company: "Akamas"
 companyUrl: "https://akamas.io/"
-communityRole: "Tech Lead @ CNCF TAG DevEx | Kubernetes v1.35 Comms Lead"
+communityRole: "Tech Lead @CNCF TAG DevEx | Kubernetes v1.35 Comms Lead | CND Italy Organizer"
 image: "/images/profiles/graziano-casto.webp"
 linkedin: "https://www.linkedin.com/in/castograziano/"
 github: "https://github.com/graz-dev"

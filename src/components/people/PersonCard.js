@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import './PersonCard.css';
+import { speakerMetaText } from '@/lib/speakerMeta';
 
 const PersonCard = ({ person, link }) => (
   <Link href={link} className='person-card-link group'>
@@ -15,10 +16,10 @@ const PersonCard = ({ person, link }) => (
 
           {person.level && (
             <div
-              className={`absolute top-2 left-2 rounded-full px-3 py-1 text-xs font-semibold uppercase shadow-md ${
+              className={`absolute top-2 left-2 border border-ink px-3 py-1 text-xs font-bold uppercase ${
                 person.level === 'core'
-                  ? 'bg-red-600 text-white'
-                  : 'bg-blue-400 text-black'
+                  ? 'bg-brand-magenta text-white'
+                  : 'bg-brand-yellow text-ink'
               }`}
             >
               {person.level === 'core' ? 'Core Organizer' : 'Organizer'}
@@ -28,9 +29,9 @@ const PersonCard = ({ person, link }) => (
 
         <div className='person-card-info'>
           <h3 className='person-card-name'>{person.name}</h3>
-          <p className='person-card-role'>
-            {person.role} {person.company && `@${person.company}`}
-          </p>
+          {/* Ruolo e azienda dalla composizione condivisa: qui due incarichi
+              stanno in fila, il terzo non entrerebbe nella card. */}
+          <p className='person-card-role'>{speakerMetaText(person, { max: 2 })}</p>
           {person.communityRole && (
             <p className='person-card-community-role'>{person.communityRole}</p>
           )}

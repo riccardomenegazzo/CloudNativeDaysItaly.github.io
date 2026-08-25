@@ -4,13 +4,19 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search, Mic, ArrowRight, ArrowLeft } from 'lucide-react';
+import DecorLayer from '@/components/decor/DecorLayer';
+import { SessionTypeBadge } from '@/components/agenda/sessionTypes';
 
 const TalkCard = ({ talk }) => {
   const defaultImage = '/images/placeholder.png';
   const imageUrl = talk.image ? talk.image : defaultImage;
   return (
-    <div className='bg-white rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group h-full flex flex-col'>
-      <div className='relative w-full h-48 sm:h-56 overflow-hidden bg-gray-900'>
+    <div className='card-pop overflow-hidden transition-all duration-100 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-pop group h-full flex flex-col'>
+      <Link
+        href={`/talk/${talk.id}`}
+        aria-label={`View session: ${talk.title}`}
+        className='relative block w-full h-48 sm:h-56 overflow-hidden bg-ink border-b-2 border-ink'
+      >
         <Image
           src={imageUrl ? imageUrl : defaultImage}
           alt={`Preview for ${talk.title}`}
@@ -19,39 +25,37 @@ const TalkCard = ({ talk }) => {
           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
           priority={false}
         />
-      </div>
+      </Link>
       <div className='p-6 flex-grow flex flex-col'>
         <div className='flex justify-between items-center mb-3'>
-          <span className='text-xs font-bold px-3 py-1 rounded-full bg-blue-100 text-blue-800'>
+          <span className='text-xs font-bold px-3 py-1 border border-ink bg-white text-ink uppercase'>
             Edition {talk.year}
           </span>
-          {talk.type && (
-            <span className='text-xs font-medium px-3 py-1 rounded-full bg-gray-100 text-gray-700'>
-              {talk.type}
-            </span>
-          )}
+          {talk.type && <SessionTypeBadge type={talk.type} />}
         </div>
         <h3
-          className='font-bold text-gray-900 text-lg line-clamp-2'
+          className='font-bold text-ink text-lg line-clamp-2'
           title={talk.title}
         >
-          {talk.title}
+          <Link href={`/talk/${talk.id}`} className='hover:text-brand-blue transition-colors'>
+            {talk.title}
+          </Link>
         </h3>
         {talk.speakers && talk.speakers.length > 0 && (
-          <p className='text-sm text-gray-500 mt-2 flex items-center gap-2'>
+          <p className='text-sm text-ink-muted mt-2 flex items-center gap-2'>
             <Mic size={14} />
             <span className='truncate'>
               {talk.speakers.map((s) => s.name).join(', ')}
             </span>
           </p>
         )}
-        <p className='text-sm text-gray-600 line-clamp-3 mt-3'>
+        <p className='text-sm text-ink-muted line-clamp-3 mt-3'>
           {talk.abstract}
         </p>
-        <div className='mt-auto pt-4 border-t border-gray-100 mt-4'>
+        <div className='mt-auto pt-4 border-t border-ink/20 mt-4'>
           <Link
             href={`/talk/${talk.id}`}
-            className='inline-flex items-center gap-1 text-sm text-blue-600 font-semibold hover:gap-2 transition-all'
+            className='inline-flex items-center gap-1 text-sm text-brand-blue font-bold hover:gap-2 transition-all'
           >
             View Session <ArrowRight className='h-4 w-4' />
           </Link>
@@ -68,17 +72,17 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className='disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm font-semibold text-gray-700 hover:bg-gray-50'
+        className='disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 px-4 py-2 bg-white border-pop border-ink font-bold text-ink hover:bg-brand-yellow-light'
       >
         <ArrowLeft size={16} /> Previous
       </button>
-      <span className='font-medium text-gray-600'>
+      <span className='font-medium text-ink-muted'>
         Page {currentPage} of {totalPages}
       </span>
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className='disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm font-semibold text-gray-700 hover:bg-gray-50'
+        className='disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 px-4 py-2 bg-white border-pop border-ink font-bold text-ink hover:bg-brand-yellow-light'
       >
         Next <ArrowRight size={16} />
       </button>
@@ -88,6 +92,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
 export default function ContentHub({
   talks = [],
+  eyebrow = null,
   title = 'Event Talks',
   description = 'Explore our schedule of talks, workshops, and networking opportunities.',
   showPagination = false,
@@ -95,14 +100,22 @@ export default function ContentHub({
   hubLink = '/content-hub',
 }) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedYear, setSelectedYear] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const TALKS_PER_PAGE = 9;
 
-  const filteredTalks = useMemo(() => {
-    const lowercasedQuery = searchQuery.toLowerCase();
-    if (!lowercasedQuery) return talks;
+  const availableYears = useMemo(
+    () => [...new Set(talks.map((t) => t.year).filter(Boolean))].sort((a, b) => b.localeCompare(a)),
+    [talks],
+  );
 
-    return talks.filter(
+  const filteredTalks = useMemo(() => {
+    const byYear =
+      selectedYear === 'all' ? talks : talks.filter((t) => t.year === selectedYear);
+    const lowercasedQuery = searchQuery.toLowerCase();
+    if (!lowercasedQuery) return byYear;
+
+    return byYear.filter(
       (talk) =>
         talk.title.toLowerCase().includes(lowercasedQuery) ||
         (talk.abstract &&
@@ -114,10 +127,15 @@ export default function ContentHub({
         (talk.tags &&
           talk.tags.some((tag) => tag.toLowerCase().includes(lowercasedQuery))),
     );
-  }, [searchQuery, talks]);
+  }, [searchQuery, selectedYear, talks]);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleYear = (year) => {
+    setSelectedYear(year);
     setCurrentPage(1);
   };
 
@@ -146,23 +164,50 @@ export default function ContentHub({
   const showViewAllButton = limit && talks.length > limit;
 
   return (
-    <section className='bg-gray-50 min-h-[60vh] py-16 lg:py-24'>
-      <div className='container mx-auto max-w-7xl px-4'>
-        <div className='text-center max-w-3xl mx-auto mb-12'>
-          <h1 className='text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tighter'>
+    <section className='relative overflow-hidden bg-white min-h-[60vh] py-16 lg:py-24'>
+      <DecorLayer
+        items={[
+          { pattern: 'cluster-a', position: 'top-right', size: 'lg' },
+          { pattern: 'cluster-duo', position: 'bottom-left', size: 'md' },
+          { pattern: 'halftone-d', position: 'bottom-left', size: 'lg', className: 'opacity-25' },
+        ]}
+      />
+      <div className='relative z-10 mx-auto max-w-[1200px] px-6'>
+        <div className='max-w-3xl mb-12'>
+          {eyebrow && <span className='stamp'>{eyebrow}</span>}
+          <h1 className={`section-heading ${eyebrow ? 'mt-6' : ''}`}>
             {title}
           </h1>
-          <p className='mt-4 text-lg text-gray-600'>{description}</p>
+          <p className='mt-4 text-lg text-ink-muted'>{description}</p>
           {!limit && (
-            <div className='relative mt-8 max-w-lg mx-auto'>
+            <div className='relative mt-8 max-w-lg'>
               <input
                 type='text'
                 placeholder='Search sessions, speakers, tags...'
                 value={searchQuery}
                 onChange={handleSearch}
-                className='w-full pl-12 pr-4 py-3 rounded-full border-2 border-gray-300 focus:outline-none focus:border-blue-500 transition-colors'
+                className='w-full pl-12 pr-4 py-3 border-pop border-ink focus:outline-none focus:shadow-pop-sm transition-shadow'
               />
-              <Search className='absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400' />
+              <Search className='absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-ink-muted' />
+            </div>
+          )}
+          {!limit && availableYears.length > 1 && (
+            <div className='mt-4 flex flex-wrap gap-2'>
+              <button
+                onClick={() => handleYear('all')}
+                className={`border-pop border-ink px-3 py-1 text-sm font-bold uppercase transition-colors ${selectedYear === 'all' ? 'bg-brand-yellow text-ink' : 'bg-white text-ink-muted hover:bg-brand-yellow-light'}`}
+              >
+                All editions
+              </button>
+              {availableYears.map((year) => (
+                <button
+                  key={year}
+                  onClick={() => handleYear(year)}
+                  className={`border-pop border-ink px-3 py-1 text-sm font-bold uppercase transition-colors ${selectedYear === year ? 'bg-brand-yellow text-ink' : 'bg-white text-ink-muted hover:bg-brand-yellow-light'}`}
+                >
+                  {year}
+                </button>
+              ))}
             </div>
           )}
         </div>
@@ -174,21 +219,21 @@ export default function ContentHub({
         </div>
 
         {!limit && filteredTalks.length === 0 && (
-          <div className='text-center mt-16'>
-            <h3 className='text-2xl font-bold text-gray-800'>
+          <div className='mt-16'>
+            <h3 className='font-display text-2xl uppercase text-ink'>
               No results found
             </h3>
-            <p className='text-gray-500 mt-2'>
+            <p className='text-ink-muted mt-2'>
               Try adjusting your search query.
             </p>
           </div>
         )}
 
         {showViewAllButton && (
-          <div className='text-center mt-12'>
+          <div className='mt-12'>
             <Link
               href={hubLink}
-              className='inline-flex items-center gap-2 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors shadow-md'
+              className='btn-pop btn-pop-primary inline-flex items-center gap-2'
             >
               Go to the Content Hub to see all available content
               <ArrowRight size={18} />

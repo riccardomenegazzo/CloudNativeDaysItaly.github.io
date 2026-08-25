@@ -73,22 +73,25 @@ async function getTalkData(talkId) {
     const agendaConfigPath = path.join(process.cwd(), 'src', 'config', 'agenda.json');
     const agenda = JSON.parse(await fs.readFile(agendaConfigPath, 'utf8'));
 
+    // `agenda.schedule` è indicizzato per giorno, non per anno: si scorrono i
+    // giorni e la data dell'orario è quella del giorno che contiene il talk.
+    // L'agenda in config è quella dell'edizione corrente, quindi i talk delle
+    // edizioni passate restano senza orario, come prima.
     let sessionInfo = {};
-    if (agenda.schedule[talkYear]) {
-        for (const slot of agenda.schedule[talkYear]) {
-            const session = slot.sessions.find(s => s.talkId === talkId);
-            if (session) {
-                const day = agenda.days.find(d => d.id === `${talkYear.substring(2)}-day`);
-                const track = agenda.tracks.find(t => t.id === session.trackId);
-                sessionInfo = {
-                    time: slot.time,
-                    startDate: day ? `${day.date}T${slot.time.split(' - ')[0]}:00` : undefined,
-                    endDate: day ? `${day.date}T${slot.time.split(' - ')[1]}:00` : undefined,
-                    room: track?.room || 'N/A'
-                };
-                break;
-            }
-        }
+    for (const [dayId, slots] of Object.entries(agenda.schedule || {})) {
+        const day = agenda.days.find(d => d.id === dayId);
+        const slot = (slots || []).find(s => (s.sessions || []).some(session => session.talkId === talkId));
+        if (!slot) continue;
+        const session = slot.sessions.find(s => s.talkId === talkId);
+        const track = agenda.tracks.find(t => t.id === session.trackId);
+        const [from, to] = slot.time.split(' - ');
+        sessionInfo = {
+            time: slot.time,
+            startDate: day && from ? `${day.date}T${from.trim()}:00` : undefined,
+            endDate: day && to ? `${day.date}T${to.trim()}:00` : undefined,
+            room: track?.room || null,
+        };
+        break;
     }
 
     return {
@@ -98,6 +101,18 @@ async function getTalkData(talkId) {
         speakers: speakerDetails.filter(Boolean),
         ...sessionInfo
     };
+}
+
+/* La sede sta in `editions/<anno>.json`: il talk sa di che anno è, quindi
+   lo schema.org descrive il posto giusto anche per le edizioni passate. */
+async function getEditionLocation(year) {
+    const editionPath = path.join(process.cwd(), 'src', 'config', 'editions', `${year}.json`);
+    try {
+        const edition = JSON.parse(await fs.readFile(editionPath, 'utf8'));
+        return edition.location || null;
+    } catch {
+        return null;
+    }
 }
 
 export async function generateMetadata({ params }) {
@@ -112,7 +127,7 @@ export async function generateMetadata({ params }) {
     const imageUrl = talk.image?.startsWith('http') ? talk.image : `${siteUrl}${talk.image || config.general.event.logo}`;
 
     return {
-        title: `${talk.title} - Cloud Native Days Italy`,
+        title: `${talk.title} - ${config.general.event.name}`,
         description: `${cleanAbstract}...`,
         alternates: {
             canonical: `${siteUrl}/talk/${talk.id}`,
@@ -141,6 +156,11 @@ export default async function TalkPage({ params }) {
     const siteUrl = config.general.event.website;
     const imageUrl = talkData.image?.startsWith('http') ? talkData.image : `${siteUrl}${talkData.image || config.general.event.logo}`;
 
+    const venue = await getEditionLocation(talkData.year);
+    // "Bologna, Italy" nelle edizioni recenti, "Bologna" nel 2025
+    const [locality, countryName] = (venue?.city || '').split(',').map(part => part.trim());
+    const country = countryName === 'Italy' ? 'IT' : countryName || 'IT';
+
     const schemaData = {
         "@context": "https://schema.org",
         "@type": "Event",
@@ -153,12 +173,19 @@ export default async function TalkPage({ params }) {
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         "location": {
             "@type": "Place",
-            "name": talkData.room,
+            // solo il nome della sede: "Sala 1" è un nome nostro, non della struttura
+            "name": venue?.name,
             "address": {
                 "@type": "PostalAddress",
-                "addressLocality": "Bologna",
-                "addressCountry": "IT"
+                "streetAddress": venue?.street,
+                "addressLocality": locality,
+                "addressCountry": country
             }
+        },
+        "organizer": {
+            "@type": "Organization",
+            "name": config.general.event.name,
+            "url": config.general.event.website
         },
         "performer": talkData.speakers.map(speaker => ({
             "@type": "Person",
