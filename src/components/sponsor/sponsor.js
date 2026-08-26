@@ -3,8 +3,9 @@ import clsx from 'clsx';
 import React from 'react';
 import Link from 'next/link';
 import styles from './sponsor.css';
+import BecomeSponsorBox from './BecomeSponsorBox';
 
-const CARD_STYLES = 'w-[200px] h-[100px]';
+const MAJOR_TIERS = ['main', 'platinum', 'gold'];
 
 const Sponsors = ({
   sponsorsByTier,
@@ -22,63 +23,21 @@ const Sponsors = ({
 
   return (
     <div id='sponsors'>
-      {isCurrent && sectionsContent.become && (
-        <section className='mx-auto max-w-7xl px-4 py-6'>
-          <div className='text-center mb-8'>
-            <h2 className='mb-4 text-4xl font-bold text-gray-900'>
-              {sectionsContent.become.title}
-            </h2>
-            <p className='mb-6 text-lg text-gray-500'>
-              {sectionsContent.become.description}
-            </p>
-            <div className='flex flex-col sm:flex-row items-center justify-center gap-4'>
-              <Link
-                type='button'
-                className='button bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600'
-                href={`mailto:${sectionsContent.contactEmail}`}
-              >
-                Contact Us
-              </Link>
-
-              {sectionsContent.become.active &&
-                sectionsContent.prospectus?.active !== false && (
-                  <a
-                    href={sectionsContent.prospectus.url}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='button bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600'
-                  >
-                    {sectionsContent.prospectus.label}
-                  </a>
-                )}
-              <a
-                href={sectionsContent.transparency.url}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='button bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600'
-              >
-                {sectionsContent.transparency.label}
-              </a>
-            </div>
-          </div>
-        </section>
-      )}
-
-      <section className='mx-auto max-w-7xl px-4 py-6'>
-        <div className='text-center'>
-          <h2 className='mb-8 text-3xl font-semibold text-gray-900 text-center'>
+      <section className='border-t-2 border-ink bg-white'>
+        <div className='mx-auto max-w-[1200px] px-6 py-16'>
+        <div>
+          <span className='stamp rotate-2 mb-6'>They make it possible</span>
+          <h2 className='section-heading mb-8 mt-6'>
             {sectionsContent.active.title}
           </h2>
           {hasActiveSponsors ? (
-            <p className='mb-6 text-lg text-gray-500'>
+            <p className='mb-6 max-w-2xl text-lg text-ink-muted'>
               {sectionsContent.active.description}
             </p>
           ) : (
-            <div className='text-center'>
-              <p className='text-lg text-gray-500'>
-                The announcement of sponsors is coming soon! ...
-              </p>
-            </div>
+            <p className='text-lg text-ink-muted'>
+              The announcement of sponsors is coming soon! ...
+            </p>
           )}
         </div>
 
@@ -90,20 +49,26 @@ const Sponsors = ({
 
           return (
             <div key={tier} className='mb-12'>
-              <div className='mb-6 flex items-center justify-center gap-2'>
-                <h3 className='text-xl font-semibold text-gray-900'>
+              <div className='mb-6 flex items-center justify-center gap-2 sm:justify-start'>
+                <h3 className='font-display text-stamp uppercase text-ink'>
                   {config.title}
                 </h3>
                 <span
                   className={clsx(
-                    'rounded-full px-2 py-0.5 text-xs font-medium',
+                    'border border-ink bg-white px-2 py-0.5 text-xs font-bold text-ink',
                     config.badgeClass,
                   )}
                 >
                   {tierSponsors.length}
                 </span>
               </div>
-              <div className='flex flex-wrap justify-center gap-4'>
+              <div
+                className={clsx(
+                  MAJOR_TIERS.includes(tier)
+                    ? 'flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:items-stretch sm:justify-start'
+                    : 'grid grid-cols-2 gap-3 [&>:only-child]:col-span-2 [&>:only-child]:justify-self-center [&>:only-child]:w-[200px] sm:flex sm:flex-wrap sm:gap-4 sm:[&>:only-child]:w-[200px]',
+                )}
+              >
                 {tierSponsors
                   .sort((a, b) => a.name.localeCompare(b.name))
                   .map((sponsor, index) => (
@@ -113,11 +78,12 @@ const Sponsors = ({
                       target='_blank'
                       rel='noopener noreferrer'
                       className={clsx(
-                        'flex items-center justify-center rounded-lg transition-all duration-300',
-                        'hover:scale-[1.02] hover:shadow-md',
-                        CARD_STYLES,
+                        'flex items-center justify-center border-pop border-ink bg-white transition-all duration-100',
+                        'hover:shadow-pop-sm',
+                        MAJOR_TIERS.includes(tier)
+                          ? 'h-[100px] w-[200px]'
+                          : 'h-[80px] w-full sm:h-[100px] sm:w-[200px]',
                         config.class,
-                        !isCurrent && 'pastSponsor',
                       )}
                     >
                       <div className='relative flex h-full w-full items-center justify-center'>
@@ -138,7 +104,35 @@ const Sponsors = ({
             </div>
           );
         })}
+
+        {/* Testimonial sponsor (wireframe: 09-sponsor-testimonial) — si
+            attiva da config quando c'è una quote reale. */}
+        {isCurrent && sectionsContent.testimonial?.active && (
+          <blockquote className='card-pop mt-4 bg-brand-yellow-light p-8'>
+            <p className='max-w-3xl text-xl font-bold text-ink'>
+              “{sectionsContent.testimonial.quote}”
+            </p>
+            <footer className='mt-4 text-sm text-ink-muted'>
+              {sectionsContent.testimonial.author}
+              {sectionsContent.testimonial.role && `, ${sectionsContent.testimonial.role}`}
+            </footer>
+          </blockquote>
+        )}
+
+        {isCurrent && (
+          <BecomeSponsorBox
+            content={sectionsContent}
+            contactEmail={sectionsContent.contactEmail}
+            className='mt-16'
+          />
+        )}
+        </div>
       </section>
+
+      {/* Invito alla sponsorship: box giallo DENTRO la sezione vetrina
+          (stesso pattern di /sponsors). Il giallo è la superficie
+          d'invito, i bottoni restano magenta/bianco: rompe l'alternanza
+          delle bande senza aggiungere una sezione. */}
     </div>
   );
 };

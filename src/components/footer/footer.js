@@ -3,25 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import {
-  FaInstagram,
-  FaYoutube,
-  FaXTwitter,
-  FaThreads,
-  FaBluesky,
-  FaLinkedinIn,
-} from 'react-icons/fa6';
-import { BiLogoTelegram } from 'react-icons/bi';
-
-const iconMap = {
-  linkedin: FaLinkedinIn,
-  youtube: FaYoutube,
-  instagram: FaInstagram,
-  x: FaXTwitter,
-  telegram: BiLogoTelegram,
-  threads: FaThreads,
-  bluesky: FaBluesky,
-};
+import SocialIcons from '@/components/social/SocialIcons';
 
 export default function Footer({ data, editions = [] }) {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -37,24 +19,31 @@ export default function Footer({ data, editions = [] }) {
   const pastEditions = editions
     .filter((e) => e !== currentEdition)
     .sort((a, b) => b.localeCompare(a));
-  const navLinks = data.navbar.links.header;
+  // La config navbar ha voci singole e gruppi (items): qui serve la lista piatta.
+  const navLinks = data.navbar.links.header.flatMap((entry) =>
+    entry.items ? entry.items : [entry],
+  );
 
   return (
-    <footer className='bg-gray-900 text-white'>
-      <div className='container mx-auto max-w-7xl px-4'>
-        <div className='h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent' />
-
+    <footer className='bg-ink text-white'>
+      {/* Separatore tricolore brand — stacca il footer dalla sezione precedente */}
+      <div aria-hidden='true' className='flex h-1.5'>
+        <div className='flex-1 bg-brand-blue' />
+        <div className='flex-1 bg-brand-magenta' />
+        <div className='flex-1 bg-brand-yellow' />
+      </div>
+      <div className='mx-auto max-w-[1200px] px-6'>
         <div className='py-16'>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12'>
             <div className='lg:col-span-1'>
-              <Image src={footer.image} alt='Logo' width={225} height={60} />
+              <Image src={footer.image} alt='Logo' width={225} height={60} style={{ height: 'auto' }} />
               <p className='mt-4 text-gray-400 text-sm'>
                 {general.event.description}
               </p>
             </div>
 
             <div className='md:col-start-2'>
-              <h3 className='text-sm font-semibold uppercase tracking-wider text-gray-300'>
+              <h3 className='font-display text-sm uppercase tracking-wider text-brand-yellow'>
                 Navigation
               </h3>
               <ul className='mt-4 space-y-3'>
@@ -62,7 +51,7 @@ export default function Footer({ data, editions = [] }) {
                   <li key={link.text}>
                     <Link
                       href={link.to}
-                      className='text-gray-400 hover:text-white transition-colors'
+                      className='text-gray-400 hover:text-brand-yellow transition-colors'
                     >
                       {link.text}
                     </Link>
@@ -72,7 +61,7 @@ export default function Footer({ data, editions = [] }) {
             </div>
 
             <div>
-              <h3 className='text-sm font-semibold uppercase tracking-wider text-gray-300'>
+              <h3 className='font-display text-sm uppercase tracking-wider text-brand-yellow'>
                 Past Editions
               </h3>
               <ul className='mt-4 space-y-3'>
@@ -80,7 +69,7 @@ export default function Footer({ data, editions = [] }) {
                   <li key={year}>
                     <Link
                       href={`/${year}`}
-                      className='text-gray-400 hover:text-white transition-colors'
+                      className='text-gray-400 hover:text-brand-yellow transition-colors'
                     >
                       Edition {year}
                     </Link>
@@ -90,14 +79,14 @@ export default function Footer({ data, editions = [] }) {
             </div>
 
             <div>
-              <h3 className='text-sm font-semibold uppercase tracking-wider text-gray-300'>
+              <h3 className='font-display text-sm uppercase tracking-wider text-brand-yellow'>
                 Connect
               </h3>
               <ul className='mt-4 space-y-3'>
                 <li>
                   <a
                     href={`mailto:${general.contact.email}`}
-                    className='text-gray-400 hover:text-white transition-colors'
+                    className='text-gray-400 hover:text-brand-yellow transition-colors'
                   >
                     Contact Us
                   </a>
@@ -105,24 +94,16 @@ export default function Footer({ data, editions = [] }) {
                 <li>
                   <Link
                     href='/sponsors'
-                    className='text-gray-400 hover:text-white transition-colors'
+                    className='text-gray-400 hover:text-brand-yellow transition-colors'
                   >
                     Sponsorship
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href='/code-of-conduct'
-                    className='text-gray-400 hover:text-white transition-colors'
-                  >
-                    Code of Conduct
                   </Link>
                 </li>
               </ul>
             </div>
           </div>
 
-          <div className='mt-12 border-t border-gray-800 pt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
+          <div className='mt-12 border-t border-white/20 pt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
             <div className='text-sm text-gray-500 text-center sm:text-left max-w-md sm:max-w-lg space-y-1.5'>
               <p className='text-gray-400'>
                 {currentYear} {general.event.name}
@@ -134,33 +115,18 @@ export default function Footer({ data, editions = [] }) {
                   target='_blank'
                   rel='license noopener noreferrer'
                   title='Creative Commons Attribution-ShareAlike 4.0 International'
-                  className='text-gray-400 hover:text-white underline underline-offset-2'
+                  className='text-gray-400 hover:text-brand-yellow underline underline-offset-2'
                 >
                   {footer.license.shortName}
                 </a>
                 .
               </p>
             </div>
-            <div className='flex justify-center gap-4 flex-wrap'>
-              {footer.icons
-                .filter((i) => i.active)
-                .map(({ iconName, url, alt }) => {
-                  const Icon = iconMap[iconName];
-                  if (!Icon) return null;
-                  return (
-                    <a
-                      key={iconName}
-                      href={url}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      aria-label={alt}
-                      className='text-gray-500 hover:text-white transition-colors'
-                    >
-                      <Icon className='w-6 h-6' />
-                    </a>
-                  );
-                })}
-            </div>
+            <SocialIcons
+              items={footer.icons}
+              className='flex justify-center gap-4 flex-wrap'
+              linkClassName='text-gray-400 hover:text-brand-yellow transition-colors'
+            />
           </div>
         </div>
       </div>

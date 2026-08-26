@@ -2,9 +2,10 @@
   "page": {
     "label": "Everything you need to know",
     "title": "FAQ 🍕",
-    "description": "Find answers to the most common questions about Cloud Native Days Italy 2026, and everything you need to plan your visit to Bologna."
+    "description": "Find answers to the most common questions about Cloud Native Days Italy 2027, and everything you need to plan your visit to Bologna."
   },
   "alert": {
+    "active": false,
     "title": "Transport Strike Alert - Monday, May 18",
     "intro": "Quick heads-up: **national strike in Italy on Monday** affecting trains, buses, and airport transit in Bologna.",
     "sections": [
@@ -33,31 +34,35 @@
     "items": [
       {
         "question": "How much does a ticket cost?",
-        "answer": "The regular ticket is priced at 160€ (ex. VAT at 22%) and covers the full 2-day event. [Get your ticket](https://ti.to/apropos/cloud-native-days-italy-2026) on our ticketing page."
+        "answer": "Ticket prices for the 2027 edition are still being defined and tickets are not on sale yet. Join our [Telegram community](https://t.me/cloudnativedaysitaly) or follow our socials to be the first to know when they become available."
       },
       {
         "question": "What does a ticket include?",
+        "hidden": true,
         "answer": "Your ticket includes 2-day access to all conference sessions, lunches on both days, workshops (subject to seat availability), and access to both the Sponsor Area and the Community/Open Source Area."
       },
       {
         "question": "Can I attend only one day?",
+        "hidden": true,
         "answer": "The ticket covers the full two-day event. We do not offer single-day passes or discounts for partial attendance.\n\nThe program is designed as a connected experience across both days. We would love to have you with us for all of it!\n\n[Get your ticket](https://ti.to/apropos/cloud-native-days-italy-2026) and make the most of it!"
       },
       {
         "question": "How is the event structured?",
-        "answer": "Cloud Native Days Italy 2026 takes place over two full days (May 18 and 19) at Savoia Hotel Regency in Bologna. The program runs across two parallel tracks and features keynotes, technical talks, lightning talks, and workshops. The venue also hosts a Sponsor Area and a Community/Open Source Area. Day 1 ends with an aperitivo for networking. [Check the agenda](/agenda) for the full program."
+        "answer": "The structure of Cloud Native Days Italy 2027 is still being finalized. We are planning two days in Bologna, with a workshop day followed by a conference day, but this is not confirmed yet and may change. [Check the agenda](/agenda) for updates."
       },
       {
         "question": "How many sessions are there?",
+        "hidden": true,
         "answer": "The program features 40+ sessions overall, spread across keynotes, technical talks, lightning talks, and workshops across two tracks and two days. [Check the agenda](/agenda) for the full schedule."
       },
       {
         "question": "How do workshops work? Can I book a seat in advance?",
+        "hidden": true,
         "answer": "Workshops are deep-dive, highly practical technical sessions: bring your own laptop to follow along hands-on.\n\nWorkshops are included in all tickets at no extra charge.\n\nSeats are not bookable in advance: access is first-come, first-served, with a capacity of approximately 20 seats per workshop. There are four workshops in total: two in the morning and two in the afternoon, each lasting 4 hours.\n\nWe are really proud of the quality of these workshops, led by top-tier professionals. And we are proud to include them in all tickets (unlike many other events where sessions like these would cost a significant amount on their own).\n\nDo not miss out. [Check the agenda](/agenda) for the full workshop schedule."
       },
       {
         "question": "Will the talks be recorded?",
-        "answer": "Yes. Talks from previous editions are available on our [YouTube channel](https://www.youtube.com/@CloudNativeDaysItaly/). We plan to publish recordings from CNDI 2026 as well; join our [Telegram community](https://t.me/cloudnativedaysitaly) or follow our socials to stay updated."
+        "answer": "Yes. Talks from previous editions are available on our [YouTube channel](https://www.youtube.com/@CloudNativeDaysItaly/). We plan to publish recordings from CNDI 2027 as well; join our [Telegram community](https://t.me/cloudnativedaysitaly) or follow our socials to stay updated."
       },
       {
         "question": "Is the event suitable for all experience levels?",
@@ -93,7 +98,7 @@
               "Take the A14 motorway exit toward Ancona / Bologna / Padova / Bologna ring road / Bologna Centro / Casalecchio.",
               "Follow signs for the Bologna ring road (tangenziale), exit for S. Lazzaro di Savena / Ancona / Padova / Bologna / Centro / Airport / Casalecchio.",
               "Take ring road exit 9 toward Bologna Centro / S. Donato.",
-              "Take the exit for Minerbio / Granarolo dell'Emilia / CAAB. Turn left onto Via S. Donato, then right onto Via del Pilastro — the Savoia Hotel Regency is there."
+              "Take the exit for Minerbio / Granarolo dell'Emilia / CAAB. Turn left onto Via S. Donato, then right onto Via del Pilastro: the Savoia Hotel Regency is there."
             ]
           },
           {
@@ -103,7 +108,7 @@
               "Take the exit toward Bologna / Borgo Panigale / Ring road / Bologna Centro / Bologna Airport.",
               "Follow signs for the ring road / Airport exit.",
               "Take ring road exit 9 toward Bologna Centro / S. Donato.",
-              "Take the exit for Minerbio / Granarolo dell'Emilia / CAAB. Turn left onto Via S. Donato, then right onto Via del Pilastro — the Savoia Hotel Regency is there."
+              "Take the exit for Minerbio / Granarolo dell'Emilia / CAAB. Turn left onto Via S. Donato, then right onto Via del Pilastro: the Savoia Hotel Regency is there."
             ]
           }
         ]
@@ -124,7 +129,7 @@
         "type": "paragraphs",
         "paragraphs": [
           "Bologna Central Station is served by high-speed and regional trains. Check timetables at Italo and Trenitalia.",
-          "From Bologna Central Station, the Savoia Hotel Regency is approximately 6 km away — reachable by public bus, taxi, or Uber."
+          "From Bologna Central Station, the Savoia Hotel Regency is approximately 6 km away, reachable by public bus, taxi, or Uber."
         ]
       },
       {
@@ -145,18 +150,27 @@
           {
             "line": "Line 88",
             "description": "From Bologna Central Station toward Granarolo dell'Emilia.",
-            "stop": "Cadriano Bivio — 700 m from Via del Pilastro 2"
+            "stop": "Cadriano Bivio, 700 m from Via del Pilastro 2"
           },
           {
             "line": "Line 35",
             "description": "From Bologna Central Station toward the Faculty of Agriculture.",
-            "stop": "Bivio Pilastro — 450 m from Via del Pilastro 2"
+            "stop": "Bivio Pilastro, 450 m from Via del Pilastro 2"
           }
         ],
         "taxis": [
-          { "name": "Taxi COTABO", "phone": "051 372727" },
-          { "name": "Taxi CAT", "phone": "051 4590" },
-          { "name": "Uber", "note": "Book via the app" }
+          {
+            "name": "Taxi COTABO",
+            "phone": "051 372727"
+          },
+          {
+            "name": "Taxi CAT",
+            "phone": "051 4590"
+          },
+          {
+            "name": "Uber",
+            "note": "Book via the app"
+          }
         ]
       }
     ]
@@ -170,15 +184,59 @@
         "icon": "Star",
         "stars": 4,
         "hotels": [
-          { "name": "Savoia Hotel Regency", "address": "Via del Pilastro, 2, Bologna", "phone": "+39 051/3767777", "email": "regency@savoia.eu" },
-          { "name": "Savoia Hotel Country House", "address": "Via San Donato, 159/161, Bologna", "phone": "+39 051/6332366", "email": "countryhouse@savoia.eu" },
-          { "name": "The Sidney Hotel", "address": "Via Michelino, 73, Bologna", "phone": "+39 051/030409", "email": "info@thesydneyhotel.eu" },
-          { "name": "Hilton Garden Inn Bologna", "address": "Via S. Donato, Quarto Inferiore, Bologna", "phone": "+39 051 606 0811", "email": "info@hgi-bologna.com" },
-          { "name": "Bleis Hotel", "address": "Via del Gomito, 16, Bologna", "phone": "+39 051 327183", "email": "info@bleishotel.com" },
-          { "name": "Holiday Inn Bologna", "address": "Via del Commercio Associato 3, Bologna", "phone": "+39 0516-6334588", "email": "info@hibolognafiera.it" },
-          { "name": "UNA Hotels Bologna", "address": "Piazza della Costituzione 1, Bologna", "phone": "02 91483767" },
-          { "name": "Hotel Cosmopolitan", "address": "Via del Commercio Associato, 9, Bologna", "phone": "+39 051 6926403", "email": "info@cosmo.bo" },
-          { "name": "Hotel Best Western Bologna", "address": "Viale Lenin, 43, Bologna", "phone": "+39 051 6024111", "email": "info@towerhotelbologna.com" }
+          {
+            "name": "Savoia Hotel Regency",
+            "address": "Via del Pilastro, 2, Bologna",
+            "phone": "+39 051/3767777",
+            "email": "regency@savoia.eu"
+          },
+          {
+            "name": "Savoia Hotel Country House",
+            "address": "Via San Donato, 159/161, Bologna",
+            "phone": "+39 051/6332366",
+            "email": "countryhouse@savoia.eu"
+          },
+          {
+            "name": "The Sidney Hotel",
+            "address": "Via Michelino, 73, Bologna",
+            "phone": "+39 051/030409",
+            "email": "info@thesydneyhotel.eu"
+          },
+          {
+            "name": "Hilton Garden Inn Bologna",
+            "address": "Via S. Donato, Quarto Inferiore, Bologna",
+            "phone": "+39 051 606 0811",
+            "email": "info@hgi-bologna.com"
+          },
+          {
+            "name": "Bleis Hotel",
+            "address": "Via del Gomito, 16, Bologna",
+            "phone": "+39 051 327183",
+            "email": "info@bleishotel.com"
+          },
+          {
+            "name": "Holiday Inn Bologna",
+            "address": "Via del Commercio Associato 3, Bologna",
+            "phone": "+39 0516-6334588",
+            "email": "info@hibolognafiera.it"
+          },
+          {
+            "name": "UNA Hotels Bologna",
+            "address": "Piazza della Costituzione 1, Bologna",
+            "phone": "02 91483767"
+          },
+          {
+            "name": "Hotel Cosmopolitan",
+            "address": "Via del Commercio Associato, 9, Bologna",
+            "phone": "+39 051 6926403",
+            "email": "info@cosmo.bo"
+          },
+          {
+            "name": "Hotel Best Western Bologna",
+            "address": "Viale Lenin, 43, Bologna",
+            "phone": "+39 051 6024111",
+            "email": "info@towerhotelbologna.com"
+          }
         ]
       },
       {
@@ -186,14 +244,52 @@
         "icon": "Star",
         "stars": 3,
         "hotels": [
-          { "name": "Hotel Fiera Wellness & Spa", "address": "Via Stalingrado 82, Bologna", "phone": "+39 051 377735", "email": "info@hotel-fiera.com" },
-          { "name": "Hotel Michelino 75", "address": "Via Michelino, 75, Bologna", "phone": "+39 051/516356", "email": "info@hotelmichelino.eu" },
-          { "name": "Hotel Maxim", "address": "Via Stalingrado, 152, Bologna", "phone": "+39 051 323235", "email": "info@hotelmaximbologna.com" },
-          { "name": "B&B Hotel Bologna", "address": "Via Marino Serenari, 13, Castel Maggiore, Bologna", "phone": "+39 0289691630", "email": "bologna@hotelbb.com" },
-          { "name": "Hotel Marco Polo", "address": "Via Marco Polo, 89/A, Bologna", "phone": "+39 0516341272" },
-          { "name": "Villa Aretusi", "address": "Via Aretusi, 5, Bologna", "phone": "+39 051 6199848", "email": "info@villa-aretusi.it" },
-          { "name": "Hotel Maggiore", "address": "Via Emilia Ponente 62/3, Bologna", "phone": "+39 051 381 634" },
-          { "name": "Hotel Astoria", "address": "Via F.lli Rosselli, 14, Bologna", "phone": "+39 051 521410", "email": "info@astoria.bo.it" }
+          {
+            "name": "Hotel Fiera Wellness & Spa",
+            "address": "Via Stalingrado 82, Bologna",
+            "phone": "+39 051 377735",
+            "email": "info@hotel-fiera.com"
+          },
+          {
+            "name": "Hotel Michelino 75",
+            "address": "Via Michelino, 75, Bologna",
+            "phone": "+39 051/516356",
+            "email": "info@hotelmichelino.eu"
+          },
+          {
+            "name": "Hotel Maxim",
+            "address": "Via Stalingrado, 152, Bologna",
+            "phone": "+39 051 323235",
+            "email": "info@hotelmaximbologna.com"
+          },
+          {
+            "name": "B&B Hotel Bologna",
+            "address": "Via Marino Serenari, 13, Castel Maggiore, Bologna",
+            "phone": "+39 0289691630",
+            "email": "bologna@hotelbb.com"
+          },
+          {
+            "name": "Hotel Marco Polo",
+            "address": "Via Marco Polo, 89/A, Bologna",
+            "phone": "+39 0516341272"
+          },
+          {
+            "name": "Villa Aretusi",
+            "address": "Via Aretusi, 5, Bologna",
+            "phone": "+39 051 6199848",
+            "email": "info@villa-aretusi.it"
+          },
+          {
+            "name": "Hotel Maggiore",
+            "address": "Via Emilia Ponente 62/3, Bologna",
+            "phone": "+39 051 381 634"
+          },
+          {
+            "name": "Hotel Astoria",
+            "address": "Via F.lli Rosselli, 14, Bologna",
+            "phone": "+39 051 521410",
+            "email": "info@astoria.bo.it"
+          }
         ]
       },
       {
@@ -201,9 +297,24 @@
         "icon": "Star",
         "stars": 2,
         "hotels": [
-          { "name": "Hotel Roveri Fattori", "address": "Via Enrico Mattei, 72, Bologna", "phone": "+39 051 532118", "email": "info@hotelroverifattori.it" },
-          { "name": "Albergo Aurora", "address": "Via P. C. S. Nasica, 110, Castenaso, Bologna", "phone": "+39 0516052174", "email": "info@albergoaurorasrl.it" },
-          { "name": "Hotel Sant'Orsola", "address": "Via Palmieri, 25, Bologna", "phone": "+39 051 302997", "email": "info@hotelsantorsola.it" }
+          {
+            "name": "Hotel Roveri Fattori",
+            "address": "Via Enrico Mattei, 72, Bologna",
+            "phone": "+39 051 532118",
+            "email": "info@hotelroverifattori.it"
+          },
+          {
+            "name": "Albergo Aurora",
+            "address": "Via P. C. S. Nasica, 110, Castenaso, Bologna",
+            "phone": "+39 0516052174",
+            "email": "info@albergoaurorasrl.it"
+          },
+          {
+            "name": "Hotel Sant'Orsola",
+            "address": "Via Palmieri, 25, Bologna",
+            "phone": "+39 051 302997",
+            "email": "info@hotelsantorsola.it"
+          }
         ]
       },
       {
@@ -211,8 +322,16 @@
         "icon": "Star",
         "stars": 1,
         "hotels": [
-          { "name": "Hotel Perla", "address": "Via S. Vitale, 77/2, Bologna", "phone": "051 224579" },
-          { "name": "Hotel Panorama", "address": "Via Giovanni Livraghi, 1, Bologna", "phone": "051 221802" }
+          {
+            "name": "Hotel Perla",
+            "address": "Via S. Vitale, 77/2, Bologna",
+            "phone": "051 224579"
+          },
+          {
+            "name": "Hotel Panorama",
+            "address": "Via Giovanni Livraghi, 1, Bologna",
+            "phone": "051 221802"
+          }
         ]
       },
       {
@@ -220,8 +339,17 @@
         "icon": "Coffee",
         "stars": 0,
         "hotels": [
-          { "name": "Locanda Corte Roveri", "address": "Via delle Biscie, 35, Bologna", "phone": "+39 051 535212", "email": "corteroveri2018@gmail.com" },
-          { "name": "Ai Tre Cedri", "address": "Via Luca Ghini 5, Int. 1, Bologna", "phone": "335 667 8859" }
+          {
+            "name": "Locanda Corte Roveri",
+            "address": "Via delle Biscie, 35, Bologna",
+            "phone": "+39 051 535212",
+            "email": "corteroveri2018@gmail.com"
+          },
+          {
+            "name": "Ai Tre Cedri",
+            "address": "Via Luca Ghini 5, Int. 1, Bologna",
+            "phone": "335 667 8859"
+          }
         ]
       }
     ]

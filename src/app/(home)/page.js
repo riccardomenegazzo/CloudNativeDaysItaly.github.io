@@ -3,10 +3,73 @@ import path from 'path';
 import matter from 'gray-matter';
 import Hero from '@/components/hero/hero';
 import Info from '@/components/info/info';
-import ActionsSection from '@/components/actions/ActionsSection';
+import WhatToExpect from '@/components/info/WhatToExpect';
+import PhotoStrip from '@/components/info/PhotoStrip';
+import ThemeSection from '@/components/theme/ThemeSection';
+import CfpSection from '@/components/actions/CfpSection';
+import AgendaGlance from '@/components/agenda/AgendaGlance';
+import TicketsSection from '@/components/tickets/TicketsSection';
 import Sponsors from '@/components/sponsor/sponsor';
+import Metrics from '@/components/metrics/metrics';
+import CommunityStrip from '@/components/community/CommunityStrip';
+import FaqTeaser from '@/components/faq/FaqTeaser';
 import config from '@/config/website.json';
+import faqConfig from '@/config/faq.json';
 import Venue from '@/components/venue/venue';
+
+// Communities e progetti OS presenti all'evento, per la strip in home
+// (wireframe: 11-community-partners). I md vivono in config/communities.
+async function getEventCommunities(edition) {
+  const groups = ['community', 'opensource'];
+  const ids = groups.flatMap((group) => edition.communities?.[group] || []);
+  const partners = await Promise.all(
+    ids.map(async (id) => {
+      try {
+        const filePath = path.join(
+          process.cwd(),
+          'src',
+          'config',
+          'communities',
+          `${id}.md`,
+        );
+        return matter(await fs.readFile(filePath, 'utf8')).data;
+      } catch {
+        return null;
+      }
+    }),
+  );
+  return partners.filter(Boolean);
+}
+
+// Statistiche dell'edizione precedente per la banda numeri sotto il hero
+// (wireframe: 02-numbers-strip). Communities & OS projects e media partner
+// sono conteggiati separatamente.
+async function getPreviousEditionStats(year) {
+  try {
+    const editionPath = path.join(
+      process.cwd(),
+      'src',
+      'config',
+      'editions',
+      `${year}.json`,
+    );
+    const edition = JSON.parse(await fs.readFile(editionPath, 'utf8'));
+    const communities = edition.communities || {};
+    return {
+      attendees: edition.metrics?.attendees,
+      speakers: (edition.speakers || []).length,
+      sponsors:
+        edition.metrics?.sponsors ??
+        Object.values(edition.sponsors || {}).flat().length,
+      communitiesAndOs:
+        (communities.community || []).length +
+        (communities.opensource || []).length,
+      mediaPartners: (communities.media || []).length,
+    };
+  } catch {
+    return null;
+  }
+}
 
 async function getSponsorsData() {
   try {
@@ -100,6 +163,10 @@ export async function generateMetadata() {
 export default async function HomePage() {
   const sponsorsData = await getSponsorsData();
   const currentEdition = await getCurrentEdition();
+  const previousYear = config.general.edition - 1;
+  const previousStats = await getPreviousEditionStats(previousYear);
+  const eventCommunities = await getEventCommunities(currentEdition);
+  const faqTeaserQuestions = (faqConfig.faq?.items || []).slice(0, 4);
   const siteUrl = config.general.event.website;
 
   const convertToISOWithTimezone = (dateString) => {
@@ -156,10 +223,24 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
       <Hero data={config.hero} />
+      {previousStats && (
+        <Metrics
+          items={[
+            { value: previousStats.attendees, label: `Attendees ${previousYear}`, accent: 'text-brand-yellow' },
+            { value: previousStats.speakers, label: 'Speakers', accent: 'text-brand-magenta' },
+            { value: previousStats.sponsors, label: 'Sponsors', accent: 'text-brand-blue' },
+            { value: previousStats.communitiesAndOs, label: 'Communities & OS Projects', accent: 'text-brand-yellow' },
+            { value: previousStats.mediaPartners, label: 'Media Partners', accent: 'text-brand-magenta' },
+          ]}
+        />
+      )}
       <Info data={config.info} />
-      <ActionsSection
-        data={{ c4p: config.proposal, tickets: config.tickets }}
-      />
+      <PhotoStrip data={config.info.photoStrip} />
+      <ThemeSection data={config.theme} />
+      <WhatToExpect data={config.info.extra} />
+      <CfpSection data={config.proposal} />
+      <AgendaGlance data={config.agendaGlance} />
+      <TicketsSection data={config.tickets} />
 
       <Sponsors
         sponsorsByTier={sponsorsData}
@@ -170,6 +251,8 @@ export default async function HomePage() {
       />
 
       <Venue data={currentEdition.location} />
+      <CommunityStrip partners={eventCommunities} />
+      <FaqTeaser questions={faqTeaserQuestions} newsletter={config.newsletter} />
     </>
   );
 }
